@@ -9,6 +9,7 @@ puts "     #{today.strftime("%B")} #{year}"
 Week = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
 puts Week.join(" ")
 
+# 該当月の1日にマッチする曜日を見つける
 w = 0
 not_found = true
 while not_found
@@ -26,10 +27,10 @@ while not_found
   puts "" if (w == 7)
 end
 
+# 2日から月末まで表示
 last = Date.new(year, month, -1)
 (2..last.day).each do |d|
-  print " " if d < 10
-  print "#{d} "
+  print "#{d} ".rjust(3);
 
   # 土曜なら改行
   puts "" if (Date.new(year, month, d).saturday?)
