@@ -1,11 +1,26 @@
 require 'date'
+require 'optparse'
+
+opt = OptionParser.new
+options = {}
+opt.on("-y [OPTIONAL]") {|v| options[:y] = v}
+opt.on("-m [OPTIONAL]") {|v| options[:m] = v}
+opt.parse(ARGV)
 
 today = Date.today
+year = today.year
 month = today.month
 day = today.day
-year = today.year
 
-puts "     #{today.strftime("%B")} #{year}"
+# 引数で受け取った値をセット
+unless options[:y].nil?
+  year = options[:y].to_i
+end
+unless options[:m].nil?
+  month = options[:m].to_i
+end
+
+puts "     #{Date.new(year, month, day).strftime("%B")} #{year}"
 Week = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
 puts Week.join(" ")
 
