@@ -27,7 +27,7 @@ Week = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
 puts Week.join(" ")
 
 # 該当月の1日にマッチする曜日を見つける
-print "   " * today.cwday
+print "   " * (Date.new(year, month, day).cwday % Week.size)
 print " 1 "
 
 # 2日から月末まで表示
