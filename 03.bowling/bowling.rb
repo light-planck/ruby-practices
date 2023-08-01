@@ -9,12 +9,12 @@ scores = score.split(',')
 
 # 数字に変換
 shots = []
-FRAME = 10  # フレーム数
+FRAME = 10 # フレーム数
 scores.each do |s|
   if s == 'X'
     shots << 10
     # 投げなかった
-    shots << -1 if shots.size < 2*FRAME - 1
+    shots << -1 if shots.size < 2 * FRAME - 1
   else
     shots << s.to_i
   end
@@ -43,12 +43,7 @@ frames.each_with_index do |frame, i|
   # ストライク
   if frame.first == 10
     point += frames[i + 1].first
-
-    if frames[i + 1][1] >= 0
-      point += frames[i + 1][1]
-    else
-      point += frames[i + 2].first
-    end
+    point += frames[i + 1][1] >= 0 ? frames[i + 1][1] : frames[i + 2].first
 
   # スペア
   elsif frame.sum == 10
