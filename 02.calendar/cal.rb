@@ -31,11 +31,10 @@ print "   " * (Date.new(year, month, day).cwday % Week.size)
 print " 1 "
 
 # 2日から月末まで表示
-last = Date.new(year, month, -1)
-(2..last.day).each do |d|
-  print "#{d} ".rjust(3);
+((Date.new(year, month, 2))..(Date.new(year, month, -1))).each do |date|
+  print "#{date.day} ".rjust(3);
 
   # 土曜なら改行
-  puts "" if (Date.new(year, month, d).saturday?)
+  puts "" if (date.saturday?)
 end
 puts ""
