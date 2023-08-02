@@ -23,18 +23,17 @@ unless options[:m].nil?
 end
 
 puts "     #{Date.new(year, month, day).strftime("%B")} #{year}"
-Week = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
-puts Week.join(" ")
+WEEK = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+puts WEEK.join(" ")
 
 # 該当月の1日にマッチする曜日を見つける
-print "   " * (Date.new(year, month, day).cwday % Week.size)
-print " 1 "
+print "   " * (Date.new(year, month, day).cwday % WEEK.size)
 
 # 2日から月末まで表示
-((Date.new(year, month, 2))..(Date.new(year, month, -1))).each do |date|
+((Date.new(year, month, 1))..(Date.new(year, month, -1))).each do |date|
   print "#{date.day} ".rjust(3);
 
   # 土曜なら改行
-  puts "" if (date.saturday?)
+  puts if (date.saturday?)
 end
-puts ""
+puts 
