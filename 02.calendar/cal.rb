@@ -26,8 +26,8 @@ puts "     #{Date.new(year, month, day).strftime("%B")} #{year}"
 WEEK = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
 puts WEEK.join(" ")
 
-# 該当月の1日にマッチする曜日を見つける
-print "   " * (Date.new(year, month, day).cwday % WEEK.size)
+# 該当月の1日まで空白を出力1
+print "   " * (Date.new(year, month, 1).wday)
 
 # 2日から月末まで表示
 ((Date.new(year, month, 1))..(Date.new(year, month, -1))).each do |date|
