@@ -20,11 +20,7 @@ scores.each do |s|
 end
 
 # フレーム毎に分割
-frames = []
-
-shots.each_slice(2) do |s|
-  frames << s
-end
+frames = shots.each_slice(2).to_a
 
 if frames.size > FRAMES
   frames[-2].concat(frames[-1])
