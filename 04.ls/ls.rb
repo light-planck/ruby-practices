@@ -68,8 +68,11 @@ end
 def main
   files = retrieve_files
 
+  # 出力する幅
   w = 3
-  h = [files.size / w, 1].max
+
+  # 出力する高さ(ファイルの個数 / wの切り上げ)
+  h = [(files.size + w - 1 ) / w, 1].max
 
   formatted_files = format_files(files, h)
   output(formatted_files)
