@@ -2,11 +2,12 @@
 # frozen_string_literal: true
 
 # カレントディレクトリに存在するファイルを名前でソート(昇順)した配列を返す
-def get_files
+def retrieve_files
   files = []
   Dir.entries('.').each do |file|
     next if ['.', '..'].include?(file)
     next if file[0] == '.'
+
     files << file
   end
   files.sort!
@@ -29,7 +30,7 @@ def format_files(files, height)
   end
 
   # 転置するときの整合性を取るために空文字列を入れる
-  if (formatted.last.size < formatted_width)
+  if formatted.last.size < formatted_width
     (formatted_width - formatted.last.size).times do
       formatted.last << ''
     end
@@ -65,7 +66,7 @@ def output(files)
 end
 
 def main
-  files = get_files
+  files = retrieve_files
 
   w = 3
   h = [files.size / w, 1].max
