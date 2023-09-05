@@ -8,8 +8,8 @@ def retrieve_files
   files.sort!
 end
 
-def format_files(files, height)
-  formatted_width = height
+def format_files(files, width)
+  formatted_width = [(files.size + width - 1) / width, 1].max
 
   formatted = [[]]
   files.each do |file|
@@ -58,9 +58,8 @@ def main
   files = retrieve_files
 
   width = 3
-  height = [(files.size + width - 1) / width, 1].max
 
-  formatted_files = format_files(files, height)
+  formatted_files = format_files(files, width)
   output(formatted_files)
 end
 
