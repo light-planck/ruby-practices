@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# カレントディレクトリに存在するファイルを名前でソート(昇順)した配列を返す
 def retrieve_files
   files = []
   Dir.entries('.').each do |file|
@@ -13,7 +12,6 @@ def retrieve_files
   files.sort!
 end
 
-# ファイルを要件定義の通りの順番に並び変える
 def format_files(files, height)
   formatted_width = height
 
@@ -39,7 +37,6 @@ def format_files(files, height)
   formatted.transpose
 end
 
-# ファイル名の長さの最大値を計算
 def calculate_max_file_length(files)
   lengths = []
   files.each do |row|
@@ -57,7 +54,6 @@ def output(files)
     row.each do |file|
       break if file == ''
 
-      # ファイル同士の間隔はファイル名の最大値 + 2にそろえる
       spaces = max_file_name_length - file.size + 2
       print file + ' ' * spaces
     end
@@ -68,10 +64,8 @@ end
 def main
   files = retrieve_files
 
-  # 出力する幅
   w = 3
 
-  # 出力する高さ(ファイルの個数 / wの切り上げ)
   h = [(files.size + w - 1) / w, 1].max
 
   formatted_files = format_files(files, h)
