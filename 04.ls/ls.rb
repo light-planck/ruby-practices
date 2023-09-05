@@ -64,11 +64,11 @@ end
 def main
   files = retrieve_files
 
-  w = 3
+  width = 3
 
-  h = [(files.size + w - 1) / w, 1].max
+  height = [(files.size + width - 1) / width, 1].max
 
-  formatted_files = format_files(files, h)
+  formatted_files = format_files(files, height)
   output(formatted_files)
 end
 
