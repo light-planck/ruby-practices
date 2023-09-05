@@ -2,12 +2,8 @@
 # frozen_string_literal: true
 
 def retrieve_files
-  files = []
-  Dir.entries('.').each do |file|
-    next if ['.', '..'].include?(file)
-    next if file[0] == '.'
-
-    files << file
+  files = Dir.entries('.').select do |file|
+    !['.', '..'].include?(file) && file[0] != '.'
   end
   files.sort!
 end
@@ -17,9 +13,6 @@ def format_files(files, height)
 
   formatted = [[]]
   files.each do |file|
-    next if ['.', '..'].include?(file)
-    next if file[0] == '.'
-
     if formatted.last.size < formatted_width
       formatted.last << file
     else
@@ -65,7 +58,6 @@ def main
   files = retrieve_files
 
   width = 3
-
   height = [(files.size + width - 1) / width, 1].max
 
   formatted_files = format_files(files, height)
