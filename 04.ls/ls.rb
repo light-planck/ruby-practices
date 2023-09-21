@@ -2,10 +2,7 @@
 # frozen_string_literal: true
 
 def retrieve_files
-  files = Dir.entries('.').select do |file|
-    !['.', '..'].include?(file) && file[0] != '.'
-  end
-  files.sort!
+  Dir.entries('.').select { |file| !['.', '..'].include?(file) && file[0] != '.' }.sort
 end
 
 def format_files(files, width)
