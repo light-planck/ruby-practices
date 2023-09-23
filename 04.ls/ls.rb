@@ -4,7 +4,7 @@
 require 'optparse'
 
 def retrieve_files(options)
-  Dir.entries('.').select { |file| options[:a] || (!['.', '..'].include?(file) && file[0] != '.') }.sort
+  Dir.entries('.').select { |file| options[:a] || file[0] != '.' }.sort
 end
 
 def format_files(files, width)
