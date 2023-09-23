@@ -1,8 +1,12 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-def retrieve_files
-  Dir.entries('.').select { |file| !['.', '..'].include?(file) && file[0] != '.' }.sort
+require 'optparse'
+
+def retrieve_files(options)
+  files = Dir.entries('.').reject { |file| file[0] == '.' }.sort
+  files.reverse! if options[:r]
+  files
 end
 
 def format_files(files, width)
@@ -52,7 +56,12 @@ def output(files)
 end
 
 def main
-  files = retrieve_files
+  opt = OptionParser.new
+  options = {}
+  opt.on('-r') { |v| options[:r] = v }
+  opt.parse(ARGV)
+
+  files = retrieve_files(options)
 
   width = 3
 
