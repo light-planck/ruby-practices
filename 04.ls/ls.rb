@@ -4,7 +4,9 @@
 require 'optparse'
 
 def retrieve_files(options)
-  Dir.entries('.').select { |file| options[:a] || !file[0].start_with?('.') }.sort
+  files = Dir.entries('.').select { |file| options[:a] || !file[0].start_with?('.') }.sort
+  files.reverse! if options[:r]
+  files
 end
 
 def format_files(files, width)
@@ -57,6 +59,7 @@ def main
   opt = OptionParser.new
   options = {}
   opt.on('-a') { |v| options[:a] = v }
+  opt.on('-r') { |v| options[:r] = v }
   opt.parse(ARGV)
 
   files = retrieve_files(options)
