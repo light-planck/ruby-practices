@@ -26,7 +26,7 @@ TYPES = {
 }.freeze
 
 def permission(mode)
-  "#{TYPE[mode[0, 2]]}#{PERMISSIONS[mode[3]]}#{PERMISSIONS[mode[4]]}#{PERMISSIONS[mode[5]]}@"
+  "#{TYPES[mode[0, 2]]}#{PERMISSIONS[mode[3]]}#{PERMISSIONS[mode[4]]}#{PERMISSIONS[mode[5]]}@"
 end
 
 def retrieve_long_format_files
@@ -46,14 +46,6 @@ def retrieve_long_format_files
       file: File.symlink?(file) ? "#{file} -> #{File.readlink(file)}" : file
     }
   end
-end
-
-def calculate_total_blocks(long_format_files)
-  total_blocks = 0
-  long_format_files.each do |file|
-    total_blocks += file[:blocks]
-  end
-  total_blocks
 end
 
 def calculate_long_format_length(long_format_files)
@@ -76,7 +68,7 @@ end
 def output_long_format_file(long_format_files)
   max_length = calculate_long_format_length(long_format_files)
 
-  puts "total #{calculate_total_blocks(long_format_files)}"
+  puts "total #{long_format_files.sum { |file| file[:blocks] }}"
   long_format_files.each do |file|
     print file[:permission]
     print padding(max_length, file, :nlink, 1) + file[:nlink]
