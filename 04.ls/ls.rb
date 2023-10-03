@@ -15,7 +15,7 @@ PERMISSIONS = {
   '7' => 'rwx'
 }.freeze
 
-TYPE = {
+TYPES = {
   '01' => 'p',
   '02' => 'c',
   '04' => 'd',
