@@ -29,25 +29,6 @@ def permission(mode)
   "#{TYPES[mode[0, 2]]}#{PERMISSIONS[mode[3]]}#{PERMISSIONS[mode[4]]}#{PERMISSIONS[mode[5]]}@"
 end
 
-def retrieve_long_format_files
-  Dir.entries('.').reject { |file| file.start_with?('.') }.sort.map do |file|
-    fs = File.lstat("./#{file}")
-
-    {
-      blocks: fs.blocks,
-      permission: permission(fs.mode.to_s(8).rjust(6, '0')),
-      nlink: fs.nlink.to_s,
-      owner: Etc.getpwuid(fs.uid).name,
-      group: Etc.getgrgid(fs.gid).name,
-      size: fs.size.to_s,
-      month: fs.mtime.month.to_s,
-      day: fs.mtime.day.to_s,
-      time: "#{format('%02d', fs.mtime.hour)}:#{format('%02d', fs.mtime.sec)}",
-      file: File.symlink?(file) ? "#{file} -> #{File.readlink(file)}" : file
-    }
-  end
-end
-
 def calculate_long_format_length(long_format_files)
   max_length = { nlink: 0, owner: 0, group: 0, size: 0, month: 0, day: 0 }
   long_format_files.each do |file|
@@ -84,7 +65,23 @@ def output_long_format_file(long_format_files)
 end
 
 def retrieve_files(options)
-  files = Dir.entries('.').select { |file| options[:a] || !file.start_with?('.') }.sort
+  files = Dir.entries('.').select { |file| options[:a] || !file.start_with?('.') }.sort.map do |file|
+    fs = File.lstat("./#{file}")
+
+    {
+      blocks: fs.blocks,
+      permission: permission(fs.mode.to_s(8).rjust(6, '0')),
+      nlink: fs.nlink.to_s,
+      owner: Etc.getpwuid(fs.uid).name,
+      group: Etc.getgrgid(fs.gid).name,
+      size: fs.size.to_s,
+      month: fs.mtime.month.to_s,
+      day: fs.mtime.day.to_s,
+      time: "#{format('%02d', fs.mtime.hour)}:#{format('%02d', fs.mtime.sec)}",
+      file: File.symlink?(file) ? "#{file} -> #{File.readlink(file)}" : file
+    }
+  end
+
   files.reverse! if options[:r]
   files
 end
@@ -143,15 +140,15 @@ def main
   opt.on('-l') { |v| options[:l] = v }
   opt.parse(ARGV)
 
+  files = retrieve_files(options)
+
   if options[:l]
-    files = retrieve_long_format_files
     output_long_format_file(files)
     exit
   end
 
-  files = retrieve_files(options)
   width = 3
-  formatted_files = format_files(files, width)
+  formatted_files = format_files(files.map { |file| file[:file] }, width)
   output(formatted_files)
 end
 
