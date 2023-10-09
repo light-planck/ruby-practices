@@ -78,6 +78,7 @@ def retrieve_files(options)
       month: fs.mtime.month.to_s,
       day: fs.mtime.day.to_s,
       time: "#{format('%02d', fs.mtime.hour)}:#{format('%02d', fs.mtime.sec)}",
+      filename: file,
       file: File.symlink?(file) ? "#{file} -> #{File.readlink(file)}" : file
     }
   end
@@ -148,7 +149,7 @@ def main
   end
 
   width = 3
-  formatted_files = format_files(files.map { |file| file[:file] }, width)
+  formatted_files = format_files(files.map { |file| file[:filename] }, width)
   output(formatted_files)
 end
 
