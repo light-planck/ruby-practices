@@ -9,53 +9,48 @@ def main
   opt.parse!(ARGV)
 
   file_names = ARGV
-  total = {}
-  total.default = 0
-  total[:name] = 'total'
+  total = total = { lines: 0, words: 0, bytes: 0, name: 'total' }
 
   max_filename_length = calculate_max_filename_length(file_names)
 
   file_names.each do |file_name|
-    str = File.read(file_name)
-
-    lines = str.count("\n")
-    total[:lines] += lines
-
-    words = str.split(/\s+/).size
-    total[:words] += words
-
+    file = File.read(file_name)
+    lines = file.count("\n")
+    words = file.split(/\s+/).size
     bytes = File.size(file_name)
-    total[:bytes] += bytes
 
     output({ lines:, words:, bytes:, name: file_name }, max_filename_length, options)
+
+    total[:lines] += lines
+    total[:words] += words
+    total[:bytes] += bytes
   end
 
   output(total, max_filename_length, options)
 end
 
 def calculate_max_filename_length(file_names)
-  max_filename_langth = {}
-  max_filename_langth[:lines] = file_names.map { |file_name| File.read(file_name).count("\n") }.max.to_s.length
-  max_filename_langth[:words] = file_names.map { |file_name| File.read(file_name).split(/\s+/).size }.max.to_s.length
-  max_filename_langth[:bytes] = file_names.map { |file_name| File.size(file_name) }.max.to_s.length
-  max_filename_langth
+  max_filename_length = Hash.new(0)
+
+  file_names.each do |file_name|
+    file = File.read(file_name)
+    max_filename_length[:lines] = [max_filename_length[:lines], file.count("\n").to_s.length].max
+    max_filename_length[:words] = [max_filename_length[:words], file.split(/\s+/).size.to_s.length].max
+    max_filename_length[:bytes] = [max_filename_length[:bytes], File.size(file_name).to_s.length].max
+  end
+
+  max_filename_length
 end
 
 def output(file, max_filename_length, options)
   base_padding = 4
 
-  print ' ' * (base_padding + max_filename_length[:lines] - file[:lines].to_s.length)
-  print file[:lines]
+  output_string = format("%#{max_filename_length[:lines] + base_padding}s", file[:lines])
+  output_string += format("%#{max_filename_length[:words] + base_padding}s", file[:words])
+  output_string += format("%#{max_filename_length[:bytes] + base_padding}s", file[:bytes])
+  output_string += " #{file[:name]}"
 
-  print ' ' * (base_padding + max_filename_length[:words] - file[:words].to_s.length)
-  print file[:words]
-
-  print ' ' * (base_padding + max_filename_length[:bytes] - file[:bytes].to_s.length)
-  print file[:bytes]
-
-  print ' '
-
-  puts file[:name]
+  puts output_string
 end
 
 main
