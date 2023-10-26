@@ -4,13 +4,15 @@
 require 'optparse'
 
 def main
+  std_input if ARGV.empty?
+
   opt = OptionParser.new
   options = ARGV.getopts('l', 'w', 'c')
   opt.parse!(ARGV)
 
   file_names = ARGV
-  total = total = { lines: 0, words: 0, bytes: 0, name: 'total' }
 
+  total = total = { lines: 0, words: 0, bytes: 0, name: 'total' }
   max_filename_length = calculate_max_filename_length(file_names)
 
   file_names.each do |file_name|
@@ -26,7 +28,18 @@ def main
     total[:bytes] += bytes
   end
 
-  output(total, max_filename_length, options)
+  output(total, max_filename_length, options) if file_names.size > 1
+end
+
+def std_input
+  file = readlines.join
+
+  lines = file.count("\n")
+  words = file.split(/\s+/).size
+  bytes = file.bytesize
+
+  puts "#{lines.to_s.rjust(8)} #{words.to_s.rjust(7)} #{bytes.to_s.rjust(7)}"
+  exit
 end
 
 def calculate_max_filename_length(file_names)
