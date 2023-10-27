@@ -5,15 +5,15 @@ require 'optparse'
 
 def main
   options = parse_options
+  file_names = ARGV
 
-  if ARGV.empty?
-    file = readlines
-    file_info = get_file_info(file.join)
-    single_output(file_info)
+  # 標準入力がある場合
+  if file_names.empty?
+    file_info = get_file_info($stdin.read)
+    output(file_info, { lines: 0, words: 0, bytes: 0 }, options)
     exit
   end
 
-  file_names = ARGV
   max_filename_length = calculate_max_filename_length(file_names)
 
   file_names.each do |file_name|
@@ -68,27 +68,14 @@ def calculate_total_file_info(file_names)
   total_info
 end
 
-def single_output(file)
-  width = 10
-
-  length = { lines: 0, words: 0, bytes: 0 }
-  file.each do |key, value|
-    length[key] = value.to_s.length
-  end
-
-  print "#{file[:lines].to_s.rjust(width - length[:lines], ' ')} "
-  print "#{file[:words].to_s.rjust(width - length[:words], ' ')} "
-  puts file[:bytes].to_s.rjust(width - length[:bytes], ' ')
-end
-
 def output(file, max_filename_length = {}, options = {})
-  base_padding = 4
+  base_padding = 10
 
   output_string = ''
-  output_string += format("%#{max_filename_length[:lines] + base_padding}s", file[:lines]) if options['l']
-  output_string += format("%#{max_filename_length[:words] + base_padding}s", file[:words]) if options['w']
-  output_string += format("%#{max_filename_length[:bytes] + base_padding}s", file[:bytes]) if options['c']
-  output_string += " #{file[:name]}"
+  output_string += format("%#{base_padding - max_filename_length[:lines]}s", file[:lines]) if options['l']
+  output_string += format("%#{base_padding - max_filename_length[:words]}s", file[:words]) if options['w']
+  output_string += format("%#{base_padding - max_filename_length[:bytes]}s", file[:bytes]) if options['c']
+  output_string += " #{file[:name]}" if file[:name] != ''
   puts output_string
 end
 
