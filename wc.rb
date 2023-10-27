@@ -32,6 +32,7 @@ def parse_options
   opt = OptionParser.new
   options = ARGV.getopts('l', 'w', 'c')
   opt.parse!(ARGV)
+  options = { 'l' => true, 'w' => true, 'c' => true } if options.values.all?(false)
   options
 end
 
@@ -83,9 +84,10 @@ end
 def output(file, max_filename_length = {}, options = {})
   base_padding = 4
 
-  output_string = format("%#{max_filename_length[:lines] + base_padding}s", file[:lines])
-  output_string += format("%#{max_filename_length[:words] + base_padding}s", file[:words])
-  output_string += format("%#{max_filename_length[:bytes] + base_padding}s", file[:bytes])
+  output_string = ''
+  output_string += format("%#{max_filename_length[:lines] + base_padding}s", file[:lines]) if options['l']
+  output_string += format("%#{max_filename_length[:words] + base_padding}s", file[:words]) if options['w']
+  output_string += format("%#{max_filename_length[:bytes] + base_padding}s", file[:bytes]) if options['c']
   output_string += " #{file[:name]}"
   puts output_string
 end
