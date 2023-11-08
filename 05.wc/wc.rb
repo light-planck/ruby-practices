@@ -37,16 +37,24 @@ def parse_options
 end
 
 def calculate_max_filename_length(file_names)
-  max_filename_length = Hash.new(0)
+  filenames_lengths = { length: [0], words: [0], bytes: [0], name: [0] }
 
   file_names.each do |file_name|
     file = File.read(file_name)
-    max_filename_length[:lines] = [max_filename_length[:lines], file.count("\n").to_s.length].max
-    max_filename_length[:words] = [max_filename_length[:words], file.split(/\s+/).size.to_s.length].max
-    max_filename_length[:bytes] = [max_filename_length[:bytes], File.size(file_name).to_s.length].max
+    file_info = get_file_info(file, file_name)
+
+    filenames_lengths[:length] << file_info[:lines].to_s.length
+    filenames_lengths[:words] << file_info[:words].to_s.length
+    filenames_lengths[:bytes] << file_info[:bytes].to_s.length
+    filenames_lengths[:name] << file_info[:name].length
   end
 
-  max_filename_length
+  {
+    lines: filenames_lengths[:length].max,
+    words: filenames_lengths[:words].max,
+    bytes: filenames_lengths[:bytes].max,
+    name: filenames_lengths[:name].max
+  }
 end
 
 def get_file_info(file, file_name = '')
