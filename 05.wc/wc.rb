@@ -66,13 +66,16 @@ end
 
 def calculate_total_file_info(file_names)
   total_info = { lines: 0, words: 0, bytes: 0, name: 'total' }
+
   file_names.each do |file_name|
     file = File.read(file_name)
     file_info = get_file_info(file, file_name)
-    total_info[:lines] += file_info[:lines]
-    total_info[:words] += file_info[:words]
-    total_info[:bytes] += file_info[:bytes]
+
+    file_info.reject { |key| key == :name }.each do |key, value|
+      total_info[key] += value
+    end
   end
+
   total_info
 end
 
