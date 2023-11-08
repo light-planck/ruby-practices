@@ -25,7 +25,7 @@ def main
   return if file_names.size <= 1
 
   total_info = calculate_total_file_info(file_names)
-  output(total_info, max_filename_length, options) if file_names.size > 1
+  output(total_info, max_filename_length, options)
 end
 
 def parse_options
