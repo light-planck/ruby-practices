@@ -15,16 +15,21 @@ def main
   end
 
   max_filename_length = calculate_max_filenames_length(file_names)
+  total_info = { lines: 0, words: 0, bytes: 0, name: 'total' }
 
   file_names.each do |file_name|
     file = File.read(file_name)
     file_info = get_file_info(file, file_name)
+
+    file_info.reject { |key| key == :name }.each do |key, value|
+      total_info[key] += value
+    end
+
     output(file_info, max_filename_length, options)
   end
 
   return if file_names.size <= 1
 
-  total_info = calculate_total_file_info(file_names)
   output(total_info, max_filename_length, options)
 end
 
@@ -56,21 +61,6 @@ def get_file_info(file, file_name = '')
   words = file.split(/\s+/).size
   bytes = file.bytesize
   { lines:, words:, bytes:, name: file_name }
-end
-
-def calculate_total_file_info(file_names)
-  total_info = { lines: 0, words: 0, bytes: 0, name: 'total' }
-
-  file_names.each do |file_name|
-    file = File.read(file_name)
-    file_info = get_file_info(file, file_name)
-
-    file_info.reject { |key| key == :name }.each do |key, value|
-      total_info[key] += value
-    end
-  end
-
-  total_info
 end
 
 def output(file, max_filename_length = {}, options = {})
