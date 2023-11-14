@@ -68,11 +68,9 @@ def output(file_stats, file_name, max_filename_length = {}, options = {})
   base_padding = 10
   option_keys = { lines: 'l', words: 'w', bytes: 'c' }.freeze
 
-  output_string = ''
-  file_stats.each do |key, value|
-    output_string += format("%#{base_padding - max_filename_length[key]}s", value) if options[option_keys[key]]
-  end
-
+  output_string = file_stats.map do |key, value|
+    format("%#{base_padding - max_filename_length[key]}s", value) if options[option_keys[key]]
+  end.join
   output_string += " #{file_name}" if file_name != ''
 
   puts output_string
