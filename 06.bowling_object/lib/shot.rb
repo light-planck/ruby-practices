@@ -4,7 +4,8 @@ class Shot
   attr_reader :mark
 
   def initialize(mark)
-    raise if mark != 'X' && !(0..9).cover?(mark.to_i)
+    raise if !mark.is_a?(String) || mark.size != 1
+    raise if mark != 'X' && mark !~ /\A[0-9]\z/
 
     @mark = mark
   end
