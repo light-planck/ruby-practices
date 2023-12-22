@@ -5,10 +5,11 @@ require_relative '../lib/frame'
 
 class FrameTest < Minitest::Test
   def test_frame
-    assert_raises { Frame.new([]) }
-    assert_raises { Frame.new([1, 2, 3, 4]) }
+    assert_equal 0, Frame.new(%w[0]).score
+    assert_equal 10, Frame.new(%w[0 X]).score
+    assert_equal 30, Frame.new(%w[X X X]).score
 
-    frame = Frame.new([0, 10])
-    assert_equal [0, 10], frame.shots
+    assert_raises { Frame.new([]) }
+    assert_raises { Frame.new(%w[1 2 3 4]) }
   end
 end
