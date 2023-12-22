@@ -7,6 +7,7 @@ class ShotTest < Minitest::Test
   def test_shot
     assert_equal 0, Shot.new('0').score
     assert_equal 10, Shot.new('X').score
+    assert_equal 10, Shot.new('10').score
 
     assert_raises(RuntimeError) { Shot.new(5) }
     assert_raises(RuntimeError) { Shot.new('11') }

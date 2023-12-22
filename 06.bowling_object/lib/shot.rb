@@ -4,10 +4,14 @@ class Shot
   attr_reader :mark
 
   def initialize(mark)
-    raise if !mark.is_a?(String) || mark.size != 1
-    raise if mark != 'X' && mark !~ /\A[0-9]\z/
+    raise if !mark.is_a?(String)
+    raise if !valid_input?(mark)
 
     @mark = mark
+  end
+
+  def valid_input?(str)
+    str =~ /\A(X|[0-9]|10)\z/
   end
 
   def score
