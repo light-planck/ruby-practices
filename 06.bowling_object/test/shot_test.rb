@@ -5,13 +5,11 @@ require_relative '../lib/shot'
 
 class ShotTest < Minitest::Test
   def test_shot
-    assert_raises(RuntimeError) { Shot.new(11) }
+    assert_raises(RuntimeError) { Shot.new(10) }
     assert_raises(RuntimeError) { Shot.new(-1) }
 
-    shot = Shot.new(0)
-    assert_equal 0, shot.value
+    assert_equal 0, Shot.new(0).score
 
-    shot2 = Shot.new(10)
-    assert_equal 10, shot2.value
+    assert_equal 10, Shot.new('X').score
   end
 end

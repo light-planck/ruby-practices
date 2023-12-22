@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class Shot
-  attr_reader :value
+  attr_reader :score
 
-  def initialize(value)
-    raise 'Value must be between 0 and 10' if !(0..10).cover?(value)
+  def initialize(mark)
+    raise if mark != 'X' && !(0..9).cover?(mark.to_i)
 
-    @value = value
+    @score = mark == 'X' ? 10 : mark.to_i
   end
 end
