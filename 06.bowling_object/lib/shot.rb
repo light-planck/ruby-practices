@@ -8,11 +8,13 @@ class Shot
     @mark = mark
   end
 
-  def valid_input?(str)
-    str =~ /\A(X|[0-9]|10)\z/
-  end
-
   def score
     @mark == 'X' ? 10 : @mark.to_i
+  end
+
+  private
+
+  def valid_input?(str)
+    str =~ /\A(X|[0-9]|10)\z/
   end
 end
