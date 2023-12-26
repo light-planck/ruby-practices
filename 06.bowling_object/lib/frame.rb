@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'shot'
+
 class Frame
   attr_reader :shots
 
@@ -11,5 +13,13 @@ class Frame
 
   def score
     @shots.sum(&:score)
+  end
+
+  def strike?
+    @shots.first.score == 10
+  end
+
+  def spare?
+    !strike? && score == 10
   end
 end
