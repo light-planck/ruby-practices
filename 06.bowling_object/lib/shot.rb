@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Shot
-  attr_reader :mark
-
   def initialize(mark)
     raise if !mark.is_a?(String)
     raise if !valid_input?(mark)
@@ -15,6 +13,6 @@ class Shot
   end
 
   def score
-    mark == 'X' ? 10 : mark.to_i
+    @mark == 'X' ? 10 : @mark.to_i
   end
 end
