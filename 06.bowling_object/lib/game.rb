@@ -3,8 +3,6 @@
 require_relative 'frame'
 
 class Game
-  attr_reader :frames
-
   PER_SHOTS = 2
   FRAMES = 10
 
