@@ -9,7 +9,11 @@ class Game
   FRAMES = 10
 
   def initialize(results)
-    splited_frames = results.split(',').each_with_object([]) do |mark, ret|
+    @results = results
+  end
+
+  def set_frames
+    splited_frames = @results.split(',').each_with_object([]) do |mark, ret|
       if mark == 'X' && ret.size < PER_SHOTS * FRAMES - 2
         ret << mark
         ret << '0'
@@ -30,6 +34,8 @@ class Game
   end
 
   def score
+    raise 'Please set frames with before calculating score.' if @frames.nil?
+
     @frames.each_with_index.sum do |frame, i|
       frame.score + bonus_score(frame, i)
     end

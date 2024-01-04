@@ -18,6 +18,7 @@ class GameTest < Minitest::Test
   RESULTS_AND_SCORES.each_with_index do |(result, score), i|
     define_method("test_game_#{i + 1}") do
       game = Game.new(result)
+      game.set_frames
       assert_equal score, game.score
     end
   end
