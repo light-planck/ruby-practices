@@ -4,6 +4,8 @@ require 'etc'
 require_relative 'permission'
 
 class FileEntry
+  attr_reader :blocks
+
   def initialize(filename)
     fs = File.lstat("./#{filename}")
 
