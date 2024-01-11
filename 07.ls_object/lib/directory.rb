@@ -3,6 +3,8 @@
 require_relative 'file_entry'
 
 class Directory
+  attr_reader :entries
+
   def initialize(options)
     @entries = fetch_entries(options)
     @blocks = calculate_total_blocks
