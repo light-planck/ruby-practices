@@ -1,16 +1,14 @@
 # frozen_string_literal: true
 
 module DirectoryUtilities
-  module Private
-    DISPLAY_COLUMNS = 3
-    KEYS = %i[nlink owner group size month day].freeze
-  end
-  private_constant :Private
+  DISPLAY_COLUMNS = 3
+  KEYS = %i[nlink owner group size month day].freeze
+  private_constant :DISPLAY_COLUMNS, :KEYS
 
   def self.to_short_format(directory)
     file_names = directory.entries.map(&:filename)
 
-    formatted_width = [(file_names.size + Private::DISPLAY_COLUMNS - 1) / Private::DISPLAY_COLUMNS, 1].max
+    formatted_width = [(file_names.size + DISPLAY_COLUMNS - 1) / DISPLAY_COLUMNS, 1].max
 
     formatted_file_names = [[]]
     file_names.each do |file|
@@ -37,7 +35,7 @@ module DirectoryUtilities
     padding_length = calculate_padding_length(directory)
     directory.entries.each do |file|
       print file.permission
-      Private::KEYS.each do |key|
+      KEYS.each do |key|
         print padding(padding_length[key], file.send(key), 1) + file.send(key)
       end
       print " #{file.time}"
@@ -65,9 +63,9 @@ module DirectoryUtilities
   end
 
   def self.calculate_padding_length(directory)
-    initial_value = Private::KEYS.map { |key| [key, 0] }.to_h
+    initial_value = KEYS.map { |key| [key, 0] }.to_h
     directory.entries.each_with_object(initial_value) do |entry, max_length|
-      Private::KEYS.each do |key|
+      KEYS.each do |key|
         max_length[key] = [entry.send(key).length, max_length[key]].max
       end
     end
