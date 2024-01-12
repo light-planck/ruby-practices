@@ -2,7 +2,7 @@
 
 module DirectoryUtilities
   module Private
-    WIDTH = 3
+    DISPLAY_COLUMNS = 3
     KEYS = %i[nlink owner group size month day].freeze
   end
   private_constant :Private
@@ -10,7 +10,7 @@ module DirectoryUtilities
   def self.to_short_format(directory)
     file_names = directory.entries.map(&:filename)
 
-    formatted_width = [(file_names.size + Private::WIDTH - 1) / Private::WIDTH, 1].max
+    formatted_width = [(file_names.size + Private::DISPLAY_COLUMNS - 1) / Private::DISPLAY_COLUMNS, 1].max
 
     formatted_file_names = [[]]
     file_names.each do |file|
