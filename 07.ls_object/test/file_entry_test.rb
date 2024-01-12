@@ -10,7 +10,7 @@ class FileEntryTest < Minitest::Test
       hash[var.to_s.delete('@').to_sym] = file_entry.instance_variable_get(var)
     end
 
-    expected = { blocks: 0, permission: '-rw-r--r--@', nlink: '1', owner: 'light', group: 'staff', size: '0', month: '9', day: '21', time: '11:12',
+    expected = { blocks: 0, permission: '-rw-r--r--', nlink: '1', owner: 'light', group: 'staff', size: '0', month: '9', day: '21', time: '11:12',
                  filename: '.gitkeep', file: '.gitkeep' }
     assert_equal expected, instance_variables_hash
   end
