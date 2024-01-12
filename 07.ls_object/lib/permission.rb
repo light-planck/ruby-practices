@@ -29,7 +29,7 @@ module Permission
     formatted_mode = format_mode(mode)
 
     [Private::TYPES[formatted_mode[0, 2]], Private::PERMISSIONS[formatted_mode[3]], Private::PERMISSIONS[formatted_mode[4]],
-     Private::PERMISSIONS[formatted_mode[5]], '@'].join
+     Private::PERMISSIONS[formatted_mode[5]]].join
   end
 
   def self.format_mode(mode)
