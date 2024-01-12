@@ -3,10 +3,9 @@
 module DirectoryUtilities
   module Private
     WIDTH = 3
+    KEYS = %i[nlink owner group size month day].freeze
   end
   private_constant :Private
-
-  def self.to_long_format; end
 
   def self.to_short_format(directory)
     file_names = directory.entries.map(&:filename)
@@ -32,31 +31,51 @@ module DirectoryUtilities
     formatted_file_names.transpose
   end
 
-  def self.print_long_format; end
+  def self.print_long_format(directory)
+    puts "total #{directory.total_blocks}"
 
-  def self.print_short_format(file_names)
-    max_file_name_length = calculate_max_file_length(file_names)
+    padding_length = calculate_padding_length(directory)
+    directory.entries.each do |file|
+      print file.permission
+      Private::KEYS.each do |key|
+        print padding(padding_length[key], file.send(key), 1) + file.send(key)
+      end
+      print " #{file.time}"
+      print " #{file.file}"
+      puts
+    end
+  end
 
-    file_names.each do |row|
+  def self.print_short_format(filenames)
+    longest_filename_length = calculate_longest_filename_length(filenames)
+
+    filenames.each do |row|
       row.each do |file|
         break if file == ''
 
-        spaces = max_file_name_length - file.size.to_i + 2
+        spaces = longest_filename_length - file.size.to_i + 2
         print file + ' ' * spaces
       end
       puts
     end
   end
 
-  def self.calculate_max_file_length(file_names)
-    lengths = []
-    file_names.each do |row|
-      row.each do |file|
-        lengths << file.size
-      end
-    end
-    lengths.max
+  def self.calculate_longest_filename_length(filenames)
+    filenames.flatten.map(&:size).max
   end
 
-  private_class_method :calculate_max_file_length
+  def self.calculate_padding_length(directory)
+    initial_value = Private::KEYS.map { |key| [key, 0] }.to_h
+    directory.entries.each_with_object(initial_value) do |entry, max_length|
+      Private::KEYS.each do |key|
+        max_length[key] = [entry.send(key).length, max_length[key]].max
+      end
+    end
+  end
+
+  def self.padding(padding_length, value, bias)
+    ' ' * (padding_length - value.length + bias)
+  end
+
+  private_class_method :calculate_longest_filename_length, :calculate_padding_length, :padding
 end

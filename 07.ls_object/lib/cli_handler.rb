@@ -11,6 +11,11 @@ class CLIHandler
   end
 
   def execute
+    if @options[:l]
+      DirectoryUtilities.print_long_format(@directory)
+      exit
+    end
+
     formatted_entries = DirectoryUtilities.to_short_format(@directory)
     DirectoryUtilities.print_short_format(formatted_entries)
   end
