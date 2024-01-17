@@ -1,0 +1,7 @@
+# frozen_string_literal: true
+
+task default: 'hello_world'
+
+file 'hello_world' => ['hello_world.c'] do
+  sh 'gcc -o hello_world hello_world.c'
+end
