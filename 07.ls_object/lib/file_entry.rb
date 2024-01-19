@@ -11,6 +11,13 @@ class FileEntry
     @filename = filename
   end
 
+  def self.fetch_file_entries(options)
+    entries = Dir.entries('.').select { |file| options[:a] || !file.start_with?('.') }.sort.map do |file|
+      FileEntry.new(file)
+    end
+    options[:r] ? entries.reverse : entries
+  end
+
   def blocks
     @fs.blocks
   end
