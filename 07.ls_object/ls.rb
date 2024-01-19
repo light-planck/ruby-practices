@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require_relative 'lib/cli_handler'
+require_relative 'lib/ls_command'
 
 def main
-  handler = CLIHandler.new
-  handler.execute
+  ls = LsCommand.new
+  ls.execute
 end
 
 main
