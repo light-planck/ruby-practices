@@ -5,6 +5,7 @@ require_relative 'file_entry'
 
 class LsCommand
   DISPLAY_COLUMNS = 3
+  KEYS = %i[nlink owner group size month day].freeze
 
   def initialize
     @options = parse_options
@@ -14,7 +15,10 @@ class LsCommand
     file_entries = FileEntry.fetch_file_entries(@options)
 
     if @options[:l]
-      print_in_long_format(file_entries)
+      puts file_entries.sum(&:blocks)
+
+      formatted_in_long = format_in_long(file_entries)
+      puts formatted_in_long
       exit
     end
 
@@ -34,6 +38,7 @@ class LsCommand
     options
   end
 
+  # short format
   def format_in_short(file_entries)
     file_names = file_entries.map(&:filename)
     formatted_width = [(file_names.size + DISPLAY_COLUMNS - 1) / DISPLAY_COLUMNS, 1].max
@@ -73,5 +78,28 @@ class LsCommand
 
   def calculate_longest_filename_length(filenames)
     filenames.flatten.map(&:size).max
+  end
+
+  # long format
+  def format_in_long(file_entries)
+    padding_length = calculate_padding_length(file_entries)
+    file_entries.map do |file_entry|
+      "#{file_entry.permission} " +
+        KEYS.map { |key| "#{padding(padding_length[key], file_entry.send(key), 1)}#{file_entry.send(key)}" }.join(' ') +
+        " #{file_entry.time} #{file_entry.file}"
+    end
+  end
+
+  def calculate_padding_length(file_entries)
+    initial_value = KEYS.map { |key| [key, 0] }.to_h
+    file_entries.each_with_object(initial_value) do |file_entry, max_length|
+      KEYS.each do |key|
+        max_length[key] = [file_entry.send(key).length, max_length[key]].max
+      end
+    end
+  end
+
+  def padding(padding_length, value, bias)
+    ' ' * (padding_length - value.length + bias)
   end
 end
