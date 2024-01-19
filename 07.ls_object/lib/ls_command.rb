@@ -9,7 +9,6 @@ class LsCommand
 
   def initialize
     @options = parse_options
-    @file_entries = FileEntry.fetch_file_entries(@options)
   end
 
   def self.calculate_longest_filename_length(filenames)
@@ -21,6 +20,8 @@ class LsCommand
   end
 
   def execute
+    fetch_file_entries
+
     if @options[:l]
       puts @file_entries.sum(&:blocks)
 
@@ -43,6 +44,13 @@ class LsCommand
     opt.on('-l') { |v| options[:l] = v }
     opt.parse(ARGV)
     options
+  end
+
+  def fetch_file_entries
+    file_entries = Dir.entries('.').select { |file| @options[:a] || !file.start_with?('.') }.sort.map do |file|
+      FileEntry.new(file)
+    end
+    @file_entries = @options[:r] ? file_entries.reverse : file_entries
   end
 
   # short format
