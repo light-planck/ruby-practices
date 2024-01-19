@@ -42,12 +42,16 @@ class FileEntry
     @fs.size.to_s
   end
 
+  def month
+    @fs.mtime.month.to_s
+  end
+
   def day
     @fs.mtime.day.to_s
   end
 
   def time
-    "#{format('%02d', @fs.mtime.hour)}:#{format('%02d', fs.mtime.sec)}"
+    "#{format('%02d', @fs.mtime.hour)}:#{format('%02d', @fs.mtime.sec)}"
   end
 
   def file
