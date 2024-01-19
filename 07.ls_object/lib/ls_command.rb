@@ -12,6 +12,14 @@ class LsCommand
     @file_entries = FileEntry.fetch_file_entries(@options)
   end
 
+  def self.calculate_longest_filename_length(filenames)
+    filenames.flatten.map(&:size).max
+  end
+
+  def self.padding(padding_length, value, bias)
+    ' ' * (padding_length - value.length + bias)
+  end
+
   def execute
     if @options[:l]
       puts @file_entries.sum(&:blocks)
@@ -62,7 +70,7 @@ class LsCommand
   end
 
   def print_in_short_format(filenames)
-    longest_filename_length = calculate_longest_filename_length(filenames)
+    longest_filename_length = LsCommand.calculate_longest_filename_length(filenames)
 
     filenames.each do |row|
       row.each do |file|
@@ -75,16 +83,12 @@ class LsCommand
     end
   end
 
-  def calculate_longest_filename_length(filenames)
-    filenames.flatten.map(&:size).max
-  end
-
   # long format
   def format_in_long
     padding_length = calculate_padding_length
     @file_entries.map do |file_entry|
       "#{file_entry.permission} " +
-        KEYS.map { |key| "#{padding(padding_length[key], file_entry.send(key), 1)}#{file_entry.send(key)}" }.join(' ') +
+        KEYS.map { |key| "#{LsCommand.padding(padding_length[key], file_entry.send(key), 1)}#{file_entry.send(key)}" }.join(' ') +
         " #{file_entry.time} #{file_entry.file}"
     end
   end
@@ -96,9 +100,5 @@ class LsCommand
         max_length[key] = [file_entry.send(key).length, max_length[key]].max
       end
     end
-  end
-
-  def padding(padding_length, value, bias)
-    ' ' * (padding_length - value.length + bias)
   end
 end
