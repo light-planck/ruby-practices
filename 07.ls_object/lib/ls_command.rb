@@ -9,20 +9,19 @@ class LsCommand
 
   def initialize
     @options = parse_options
+    @file_entries = FileEntry.fetch_file_entries(@options)
   end
 
   def execute
-    file_entries = FileEntry.fetch_file_entries(@options)
-
     if @options[:l]
-      puts file_entries.sum(&:blocks)
+      puts @file_entries.sum(&:blocks)
 
-      formatted_in_long = format_in_long(file_entries)
+      formatted_in_long = format_in_long
       puts formatted_in_long
       exit
     end
 
-    formatted_in_short = format_in_short(file_entries)
+    formatted_in_short = format_in_short
     print_in_short_format(formatted_in_short)
   end
 
@@ -39,8 +38,8 @@ class LsCommand
   end
 
   # short format
-  def format_in_short(file_entries)
-    file_names = file_entries.map(&:filename)
+  def format_in_short
+    file_names = @file_entries.map(&:filename)
     formatted_width = [(file_names.size + DISPLAY_COLUMNS - 1) / DISPLAY_COLUMNS, 1].max
 
     formatted_file_names = [[]]
@@ -81,18 +80,18 @@ class LsCommand
   end
 
   # long format
-  def format_in_long(file_entries)
-    padding_length = calculate_padding_length(file_entries)
-    file_entries.map do |file_entry|
+  def format_in_long
+    padding_length = calculate_padding_length
+    @file_entries.map do |file_entry|
       "#{file_entry.permission} " +
         KEYS.map { |key| "#{padding(padding_length[key], file_entry.send(key), 1)}#{file_entry.send(key)}" }.join(' ') +
         " #{file_entry.time} #{file_entry.file}"
     end
   end
 
-  def calculate_padding_length(file_entries)
+  def calculate_padding_length
     initial_value = KEYS.map { |key| [key, 0] }.to_h
-    file_entries.each_with_object(initial_value) do |file_entry, max_length|
+    @file_entries.each_with_object(initial_value) do |file_entry, max_length|
       KEYS.each do |key|
         max_length[key] = [file_entry.send(key).length, max_length[key]].max
       end
