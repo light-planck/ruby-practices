@@ -11,12 +11,22 @@ class LsCommand
     @options = parse_options
   end
 
-  def self.calculate_longest_filename_length(filenames)
-    filenames.flatten.map(&:size).max
-  end
-
   def self.padding(padding_length, value, bias)
     ' ' * (padding_length - value.length + bias)
+  end
+
+  def self.print_in_short_format(filenames)
+    longest_filename_length = filenames.flatten.map(&:size).max
+
+    filenames.each do |row|
+      row.each do |file|
+        break if file == ''
+
+        spaces = longest_filename_length - file.size.to_i + 2
+        print file + ' ' * spaces
+      end
+      puts
+    end
   end
 
   def execute
@@ -31,7 +41,7 @@ class LsCommand
     end
 
     formatted_in_short = format_in_short
-    print_in_short_format(formatted_in_short)
+    LsCommand.print_in_short_format(formatted_in_short)
   end
 
   private
@@ -75,20 +85,6 @@ class LsCommand
     end
 
     formatted_file_names.transpose
-  end
-
-  def print_in_short_format(filenames)
-    longest_filename_length = LsCommand.calculate_longest_filename_length(filenames)
-
-    filenames.each do |row|
-      row.each do |file|
-        break if file == ''
-
-        spaces = longest_filename_length - file.size.to_i + 2
-        print file + ' ' * spaces
-      end
-      puts
-    end
   end
 
   # long format
