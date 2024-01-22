@@ -1,10 +1,29 @@
 # frozen_string_literal: true
 
 require 'etc'
-require_relative 'permission'
 
 class FileEntry
   attr_reader :filename
+
+  PERMISSIONS = {
+    '0' => '---',
+    '1' => '--x',
+    '2' => '-w-',
+    '3' => '-wx',
+    '4' => 'r--',
+    '5' => 'r-x',
+    '6' => 'rw-',
+    '7' => 'rwx'
+  }.freeze
+  TYPES = {
+    '01' => 'p',
+    '02' => 'c',
+    '04' => 'd',
+    '06' => 'b',
+    '10' => '-',
+    '12' => 'l',
+    '14' => 's'
+  }.freeze
 
   def initialize(filename)
     @fs = File.lstat("./#{filename}")
@@ -16,7 +35,10 @@ class FileEntry
   end
 
   def permission
-    Permission.permission(@fs.mode)
+    formatted_mode = @fs.mode.to_s(8).rjust(6, '0')
+
+    [TYPES[formatted_mode[0, 2]], PERMISSIONS[formatted_mode[3]], PERMISSIONS[formatted_mode[4]],
+     PERMISSIONS[formatted_mode[5]]].join
   end
 
   def nlink
