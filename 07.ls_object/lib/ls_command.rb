@@ -6,6 +6,25 @@ require_relative 'file_entry'
 class LsCommand
   DISPLAY_COLUMNS = 3
   KEYS = %i[nlink owner group size month day].freeze
+  PERMISSIONS = {
+    '0' => '---',
+    '1' => '--x',
+    '2' => '-w-',
+    '3' => '-wx',
+    '4' => 'r--',
+    '5' => 'r-x',
+    '6' => 'rw-',
+    '7' => 'rwx'
+  }.freeze
+  TYPES = {
+    '01' => 'p',
+    '02' => 'c',
+    '04' => 'd',
+    '06' => 'b',
+    '10' => '-',
+    '12' => 'l',
+    '14' => 's'
+  }.freeze
 
   def initialize
     @options = parse_options
@@ -104,5 +123,12 @@ class LsCommand
         max_length[key] = [file_entry.send(key).length, max_length[key]].max
       end
     end
+  end
+
+  def permission(mode)
+    formatted_mode = mode.to_s(8).rjust(6, '0')
+
+    [TYPES[formatted_mode[0, 2]], PERMISSIONS[formatted_mode[3]], PERMISSIONS[formatted_mode[4]],
+     PERMISSIONS[formatted_mode[5]]].join
   end
 end
