@@ -9,6 +9,7 @@ class LsCommand
 
   def initialize
     @options = parse_options
+    @file_entries = fetch_file_entries
   end
 
   def self.padding(padding_length, value, bias)
@@ -16,8 +17,6 @@ class LsCommand
   end
 
   def execute
-    fetch_file_entries
-
     if @options[:l]
       puts @file_entries.sum(&:blocks)
 
@@ -43,10 +42,11 @@ class LsCommand
   end
 
   def fetch_file_entries
-    file_entries = Dir.entries('.').select { |file| @options[:a] || !file.start_with?('.') }.sort.map do |file|
-      FileEntry.new(file)
-    end
-    @file_entries = @options[:r] ? file_entries.reverse : file_entries
+    file_names = Dir.entries('.')
+    file_names = file_names.select { |file| @options[:a] || !file.start_with?('.') }
+    file_names.sort!
+    file_names.reverse! if @options[:r]
+    file_names.map { |file| FileEntry.new(file) }
   end
 
   # short format
