@@ -12,10 +12,6 @@ class LsCommand
     @file_entries = fetch_file_entries
   end
 
-  def self.padding(padding_length, value, bias)
-    ' ' * (padding_length - value.length + bias)
-  end
-
   def execute
     if @options[:l]
       puts @file_entries.sum(&:blocks)
@@ -92,7 +88,7 @@ class LsCommand
     padding_length = calculate_padding_length
     @file_entries.map do |file_entry|
       "#{file_entry.permission} " +
-        KEYS.map { |key| "#{LsCommand.padding(padding_length[key], file_entry.send(key), 1)}#{file_entry.send(key)}" }.join(' ') +
+        KEYS.map { |key| "#{padding(padding_length[key], file_entry.send(key), 1)}#{file_entry.send(key)}" }.join(' ') +
         " #{file_entry.time} #{file_entry.file}"
     end
   end
@@ -104,5 +100,9 @@ class LsCommand
         max_length[key] = [file_entry.send(key).length, max_length[key]].max
       end
     end
+  end
+
+  def padding(padding_length, value, offset)
+    ' ' * (padding_length - value.length + offset)
   end
 end
