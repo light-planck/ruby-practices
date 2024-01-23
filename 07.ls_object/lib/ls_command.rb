@@ -39,7 +39,7 @@ class LsCommand
 
   def fetch_file_entries
     file_names = Dir.entries('.')
-    file_names = file_names.select { |file| @options[:a] || !file.start_with?('.') }
+    file_names = file_names.reject { |file| file.start_with?('.') } unless @options[:a]
     file_names.sort!
     file_names.reverse! if @options[:r]
     file_names.map { |file| FileEntry.new(file) }
