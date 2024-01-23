@@ -13,7 +13,7 @@ class LongFileFormatter
       "#{file_entry.permission} " +
         KEYS.map { |key| "#{padding(padding_length[key], file_entry.send(key), 1)}#{file_entry.send(key)}" }.join(' ') +
         " #{file_entry.time} #{file_entry.file}"
-    end.unshift(@file_entries.sum(&:blocks))
+    end.unshift("total #{@file_entries.sum(&:blocks)}")
   end
 
   private
